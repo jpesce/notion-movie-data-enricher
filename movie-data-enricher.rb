@@ -70,10 +70,20 @@ logger.info {"Application started"}
 begin
   notion_db_id = "db15f0674d7049158446337615e54bc3"
   filter = {
-    "property": "Don't enrich",
-    "checkbox": {
-      "equals": false
-    }
+    "and": [
+      {
+        "property": "Don't enrich",
+        "checkbox": {
+          "equals": false
+        }
+      },
+      {
+        "property": "Name",
+        "title": {
+          "is_not_empty": true
+        }
+      }
+    ]
   }
   response = Notion.filter_database(notion_db_id, filter)
   notion_pages = JSON.parse(response.read_body)["results"]
