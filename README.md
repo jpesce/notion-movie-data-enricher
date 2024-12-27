@@ -1,4 +1,7 @@
 <p align="center">
+  <p align="center">
+   <img src="https://github.com/user-attachments/assets/7fdc5944-fe4d-42c3-9e53-712601c74afc" alt="Movie Data Enricher">
+  </p>
   <h1 align="center"><b>The Catalog Movie Data Enricher</b></h1>
   <p align="center">
     Enrich movie metadata in Notion database
