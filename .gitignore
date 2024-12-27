@@ -1,0 +1,10 @@
+# Editors
+.vscode
+.vim
+.ruby-lsp
+
+# Logs
+log/*
+
+# Environment variables
+.env
