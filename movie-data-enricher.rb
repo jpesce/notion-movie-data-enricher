@@ -18,9 +18,16 @@ def enrich_notion_movie_page(movie_page)
   poster = "https://image.tmdb.org/t/p/original#{tmdb_info["poster_path"]}"
   release_date = tmdb_info["release_date"] || tmdb_info["first_air_date"]
   release_year = Date.parse(release_date).year
+  type = tmdb_info["media_type"]
+
+  # TMDB - Genres
+  genres = tmdb_info["genre_ids"].map{ |genre_id| 
+    TMDB.genres(type: type)["genres"].detect{ |genre| genre["id"] == genre_id }
+  }
+  genres_names = genres.map{ |genre| genre["name"] }
 
   # TMDB - Movie credits
-  tmdb_credits = TMDB.get_credits(tmdb_info["id"], type: tmdb_info["media_type"])
+  tmdb_credits = TMDB.get_credits(tmdb_info["id"], type: type)
 
   crew = tmdb_credits["crew"]
   directors = crew.select{ |person| person["job"] == "Director" }.map{ |director| director["name"] }
@@ -52,6 +59,9 @@ def enrich_notion_movie_page(movie_page)
       },
       "Year": {
         "number": release_year
+      },
+      "Genres": {
+        "multi_select": genres_names.map{ |genre| { "name": genre }}
       },
       "Don't enrich": {
         "checkbox": true

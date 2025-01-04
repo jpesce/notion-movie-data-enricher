@@ -4,6 +4,13 @@ require_relative "../util/extend_net.rb"
 
 module TMDB
   TMDB_AUTHORIZATION = "Bearer #{ENV["TMDB_TOKEN"]}"
+  @genres = {}
+
+  def TMDB.genres(type: "movie")
+    return @genres[type] if @genres.has_key?(type)
+
+    @genres[type] = get_genres(type: type)
+  end
 
   def self.get_multi(title, year:)
     include Logging
@@ -45,6 +52,24 @@ module TMDB
     logger.info("Querying TMDB for credits for title #{id}, type: #{type} - REQUEST - " + request.to_json)
     response = https.request(request)
     logger.info("Querying TMDB for credits for title #{id}, type: #{type} - RESPONSE - " + response.to_json)
+
+    return JSON.parse(response.read_body)
+  end
+
+  def self.get_genres(type: "movie")
+    include Logging
+
+    url = URI("https://api.themoviedb.org/3/genre/#{type}/list")
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    request = Net::HTTP::Get.new(url)
+    request["Accept"] = "application/json"
+    request["Authorization"] = TMDB_AUTHORIZATION
+
+    logger.info("Querying TMDB for #{type} genres - REQUEST - " + request.to_json)
+    response = https.request(request)
+    logger.info("Querying TMDB for #{type} genres - RESPONSE - " + response.to_json)
 
     return JSON.parse(response.read_body)
   end
