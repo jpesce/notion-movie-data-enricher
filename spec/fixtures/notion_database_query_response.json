@@ -1,0 +1,140 @@
+{
+    "object": "list",
+    "results": [
+        {
+            "object": "page",
+            "id": "b57d87bd-a4b6-4cc8-9e16-479ee2e457a0",
+            "created_time": "2023-06-26T12:12:00.000Z",
+            "last_edited_time": "2025-06-03T23:54:00.000Z",
+            "created_by": {
+                "object": "user",
+                "id": "2cf2f1a3-b4bf-48dd-854c-01a6028c88b5"
+            },
+            "last_edited_by": {
+                "object": "user",
+                "id": "2cf2f1a3-b4bf-48dd-854c-01a6028c88b5"
+            },
+            "cover": {
+                "type": "external",
+                "external": {
+                    "url": "https://image.tmdb.org/t/p/original/1cmOc3ZPkuCTOTqHEsRr3Pk81Um.jpg"
+                }
+            },
+            "icon": {
+                "type": "external",
+                "external": {
+                    "url": "https://www.notion.so/icons/movie-camera_lightgray.svg"
+                }
+            },
+            "parent": {
+                "type": "database_id",
+                "database_id": "db15f067-4d70-4915-8446-337615e54bc3"
+            },
+            "archived": false,
+            "in_trash": false,
+            "properties": {
+                "TMDB link": {
+                    "id": "%3BT%5Bo",
+                    "type": "url",
+                    "url": "https://www.themoviedb.org/movie/179144"
+                },
+                "Status": {
+                    "id": "CzJU",
+                    "type": "status",
+                    "status": {
+                        "id": "a9b742de-c111-40fc-86f0-4ebfd9a08aba",
+                        "name": "Watched",
+                        "color": "green"
+                    }
+                },
+                "IMDb link": {
+                    "id": "C~RL",
+                    "type": "url",
+                    "url": "https://www.imdb.com/title/tt2358891/"
+                },
+                "Seal of approval": {
+                    "id": "Dc%7C%7D",
+                    "type": "checkbox",
+                    "checkbox": true
+                },
+                "Enriched": {
+                    "id": "PK%3Cf",
+                    "type": "checkbox",
+                    "checkbox": false
+                },
+                "Director": {
+                    "id": "Vepb",
+                    "type": "multi_select",
+                    "multi_select": [
+                        {
+                            "id": "b5f57670-e675-4c92-9d99-8de09451a18e",
+                            "name": "Paolo Sorrentino",
+                            "color": "default"
+                        }
+                    ]
+                },
+                "IMDb rating": {
+                    "id": "%5BhwX",
+                    "type": "number",
+                    "number": 7.7
+                },
+                "Genres": {
+                    "id": "%5Cyn%60",
+                    "type": "multi_select",
+                    "multi_select": [
+                        {
+                            "id": "50d9af33-1885-4ba7-b86c-e3fa134589b2",
+                            "name": "Drama",
+                            "color": "blue"
+                        }
+                    ]
+                },
+                "Year": {
+                    "id": "nx~j",
+                    "type": "number",
+                    "number": 2013
+                },
+                "Rating": {
+                    "id": "pSBH",
+                    "type": "select",
+                    "select": {
+                        "id": "694d66a3-865d-48ea-9149-6e63d0641804",
+                        "name": "★★★",
+                        "color": "default"
+                    }
+                },
+                "Name": {
+                    "id": "title",
+                    "type": "title",
+                    "title": [
+                        {
+                            "type": "text",
+                            "text": {
+                                "content": "La grande bellezza (The Great Beauty)",
+                                "link": null
+                            },
+                            "annotations": {
+                                "bold": false,
+                                "italic": false,
+                                "strikethrough": false,
+                                "underline": false,
+                                "code": false,
+                                "color": "default"
+                            },
+                            "plain_text": "La grande bellezza (The Great Beauty)",
+                            "href": null
+                        }
+                    ]
+                }
+            },
+            "url": "https://www.notion.so/La-grande-bellezza-The-Great-Beauty-b57d87bda4b64cc89e16479ee2e457a0",
+            "public_url": null
+        }
+    ],
+    "next_cursor": null,
+    "has_more": false,
+    "type": "page_or_database",
+    "page_or_database": {},
+    "developer_survey": "https://notionup.typeform.com/to/bllBsoI4?utm_source=postman",
+    "request_id": "2abe2b3c-fe63-4764-a50b-203c9dd51ef1"
+}

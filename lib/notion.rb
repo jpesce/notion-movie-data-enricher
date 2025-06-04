@@ -25,7 +25,7 @@ module Notion
     return response
   end
 
-  def self.filter_database(id, filter)
+  def self.query_database(id, query)
     include Logging
 
     url = URI("https://api.notion.com/v1/databases/#{id}/query")
@@ -36,7 +36,7 @@ module Notion
     request["Authorization"] = NOTION_AUTHORIZATION
     request["Notion-Version"] = NOTION_VERSION
     request["Content-Type"] = "application/json"
-    request.body = JSON.dump({ "filter": filter })
+    request.body = JSON.dump(query)
 
     logger.info("Filtering Notion database #{id} - REQUEST - " + request.to_json)
     response = https.request(request)
