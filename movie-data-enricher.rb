@@ -18,7 +18,7 @@ def search_movie(notion_page)
     tmdb_id = tmdb_link.split("/").last
     tmdb_type = tmdb_link.split("/")[-2]
     logger.info("Found TMDB link, using ID: #{tmdb_id} of type #{tmdb_type}")
-    return TMDB.get_details(tmdb_id, type: tmdb_type)
+    return TMDB.get_details(tmdb_id, append_to_response: "external_ids", type: tmdb_type)
   end
 
   # Try IMDb link second
@@ -27,23 +27,37 @@ def search_movie(notion_page)
     imdb_id = imdb_link.split("?").first.split("/").last
     logger.info("Found IMDb link, using ID: #{imdb_id}")
     result = TMDB.find_by_external_id(imdb_id)
+
     # The find_by_external_id returns results in movie_results and tv_results arrays
+    type = nil
     if result["movie_results"].any?
-      movie = result["movie_results"].first
-      return TMDB.get_details(movie["id"], type: "movie")
+      type = "movie"
     elsif result["tv_results"].any?
-      tv = result["tv_results"].first
-      return TMDB.get_details(tv["id"], type: "tv")
+      type = "tv"
+    end
+
+    if type
+      id = result["#{type}_results"].first["id"]
+      return TMDB.get_details(id, type: type)
     end
   end
 
-  # Fallback to multi search
+  # Fallback to specific type searches
   title = notion_page["properties"]["Name"]["title"][0]["plain_text"]
   year = notion_page["properties"]["Year"]["number"]
-  logger.info("No external links found, using multi search with title: #{title} and year: #{year}")
-  result = TMDB.get_multi(title, year: year)
-  if result
-    return TMDB.get_details(result["id"], type: result["media_type"])
+  logger.info("No external links found, searching for movie with title: #{title} and year: #{year}")
+  
+  # Try movie search first
+  result = TMDB.search(title, year: year, type: "movie")
+  if result && !result.empty?
+    return TMDB.get_details(result["id"], append_to_response: "external_ids", type: "movie")
+  end
+
+  # If no movie found, try TV search
+  logger.info("No movie found, searching for TV show with title: #{title} and year: #{year}")
+  result = TMDB.search(title, year: year, type: "tv")
+  if result && !result.empty?
+    return TMDB.get_details(result["id"], append_to_response: "external_ids", type: "tv")
   end
 
   logger.error("No results found for title: #{title} and year: #{year}")
@@ -69,7 +83,7 @@ def enrich_notion_movie_page(movie_page)
   release_date = tmdb_info["release_date"] || tmdb_info["first_air_date"]
   release_year = Date.parse(release_date).year
   genres = tmdb_info["genres"]
-  imdb_id = tmdb_info["imdb_id"]
+  imdb_id = tmdb_info["external_ids"]["imdb_id"]
   tmdb_id = tmdb_info["id"]
   media_type = tmdb_info["media_type"]
 
@@ -77,7 +91,6 @@ def enrich_notion_movie_page(movie_page)
   imdb_rating = nil
   if imdb_id
     imdb_rating = IMDB.get_rating(imdb_id)
-    logger.info("Fetched IMDb rating: #{imdb_rating} for #{imdb_id}")
   end
 
   # TMDB - Movie credits

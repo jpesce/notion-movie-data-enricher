@@ -39,8 +39,9 @@ The program identifies the correct TMDB entry using the following fallback strat
 
 2. **IMDb Link Present**: Uses the IMDb ID to look up the TMDB equivalent.
 
-3. **No Links Available**: Falls back to searching TMDB by the Notion page title. Movies are
-   prioritized over TV shows when multiple results are found.
+3. **No Links Available**: Falls back to searching TMDB by the movie name and,
+if present, also take into consideration the year to get more accurate results.
+Movies are prioritized over TV shows when multiple results are found.
 
 ## Data Sources
 

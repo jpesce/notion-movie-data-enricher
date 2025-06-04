@@ -12,7 +12,7 @@ module TMDB
     @genres[type] = get_genres(type: type)
   end
 
-  def self.get_multi(title, year:)
+  def self.get_multi(title)
     include Logging
 
     url = URI.parse(URI::Parser.new.escape("https://api.themoviedb.org/3/search/multi?query=#{title}&include_adult=false"))
@@ -23,9 +23,9 @@ module TMDB
     request["Accept"] = "application/json"
     request["Authorization"] = TMDB_AUTHORIZATION
 
-    logger.info("Searching TMDB for title #{title}#{year && " (#{year})"} - REQUEST - " + request.to_json)
+    logger.info("Searching TMDB for title #{title} - REQUEST - " + request.to_json)
     response = https.request(request)
-    logger.info("Searching TMDB for title #{title}#{year && " (#{year})"} - RESPONSE - " + response.to_json)
+    logger.info("Searching TMDB for title #{title} - RESPONSE - " + response.to_json)
 
     json_response = JSON.parse(response.read_body)
     # Priority is movie
@@ -40,8 +40,29 @@ module TMDB
     return []
   end
 
+  def self.search(title, year: nil, type: "movie")
+    include Logging
+
+    query = title
+    query += "&year=#{year}" if year
+    url = URI.parse(URI::Parser.new.escape("https://api.themoviedb.org/3/search/#{type}?query=#{query}&include_adult=false"))
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    request = Net::HTTP::Get.new(url)
+    request["Accept"] = "application/json"
+    request["Authorization"] = TMDB_AUTHORIZATION
+
+    logger.info("Searching TMDB for #{type} #{title}#{year && " (#{year})"} - REQUEST - " + request.to_json)
+    response = https.request(request)
+    logger.info("Searching TMDB for #{type} #{title}#{year && " (#{year})"} - RESPONSE - " + response.to_json)
+
+    json_response = JSON.parse(response.read_body)
+    return json_response["results"].first || []
+  end
+
   def self.get_credits(id, type: "movie")
-    url = URI("https://api.themoviedb.org/3/#{type}/#{id}/credits?language=en-US")
+    url = URI("https://api.themoviedb.org/3/#{type}/#{id}/credits")
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
@@ -92,10 +113,12 @@ module TMDB
     return JSON.parse(response.read_body)
   end
 
-  def self.get_details(id, type: "movie")
+  def self.get_details(id, append_to_response: nil, type: "movie")
     include Logging
 
-    url = URI("https://api.themoviedb.org/3/#{type}/#{id}?language=en-US")
+    query = id.to_s
+    query += "?append_to_response=#{append_to_response}" if append_to_response
+    url = URI("https://api.themoviedb.org/3/#{type}/#{query}")
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
