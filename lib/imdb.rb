@@ -6,11 +6,10 @@ require_relative "../util/extend_net"
 module IMDB
   include Logging
 
-  REST_ENDPOINT = "https://api.imdbapi.dev/"
-  GRAPHQL_ENDPOINT = "https://graph.imdbapi.dev/v1"
+  BASE_URL = "https://api.imdbapi.dev/"
 
   def self.get_rating(imdb_id)
-    uri = URI("#{REST_ENDPOINT}titles/#{imdb_id}")
+    uri = URI("#{BASE_URL}titles/#{imdb_id}")
     request = Net::HTTP::Post.new(uri)
     request["Content-Type"] = "application/json"
 

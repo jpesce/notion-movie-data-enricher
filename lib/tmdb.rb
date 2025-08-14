@@ -3,7 +3,8 @@ require "dotenv/load"
 require_relative "../util/extend_net.rb"
 
 module TMDB
-  TMDB_AUTHORIZATION = "Bearer #{ENV["TMDB_TOKEN"]}"
+  BASE_URL = "https://api.themoviedb.org/3"
+  AUTHORIZATION = "Bearer #{ENV["TMDB_TOKEN"]}"
   @genres = {}
 
   def TMDB.genres(type: "movie")
@@ -15,13 +16,13 @@ module TMDB
   def self.get_multi(title)
     include Logging
 
-    url = URI.parse(URI::Parser.new.escape("https://api.themoviedb.org/3/search/multi?query=#{title}&include_adult=false"))
+    url = URI.parse(URI::Parser.new.escape("#{BASE_URL}/search/multi?query=#{title}&include_adult=false"))
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
     request = Net::HTTP::Get.new(url)
     request["Accept"] = "application/json"
-    request["Authorization"] = TMDB_AUTHORIZATION
+    request["Authorization"] = AUTHORIZATION
 
     logger.info("Searching TMDB for title #{title} - REQUEST - " + request.to_json)
     response = https.request(request)
@@ -45,13 +46,13 @@ module TMDB
 
     query = title
     query += "&year=#{year}" if year
-    url = URI.parse(URI::Parser.new.escape("https://api.themoviedb.org/3/search/#{type}?query=#{query}&include_adult=false"))
+    url = URI.parse(URI::Parser.new.escape("#{BASE_URL}/search/#{type}?query=#{query}&include_adult=false"))
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
     request = Net::HTTP::Get.new(url)
     request["Accept"] = "application/json"
-    request["Authorization"] = TMDB_AUTHORIZATION
+    request["Authorization"] = AUTHORIZATION
 
     logger.info("Searching TMDB for #{type} #{title}#{year && " (#{year})"} - REQUEST - " + request.to_json)
     response = https.request(request)
@@ -62,13 +63,13 @@ module TMDB
   end
 
   def self.get_credits(id, type: "movie")
-    url = URI("https://api.themoviedb.org/3/#{type}/#{id}/credits")
+    url = URI("#{BASE_URL}/#{type}/#{id}/credits")
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
     request = Net::HTTP::Get.new(url)
     request["Accept"] = "application/json"
-    request["Authorization"] = TMDB_AUTHORIZATION
+    request["Authorization"] = AUTHORIZATION
 
     logger.info("Querying TMDB for credits for title #{id}, type: #{type} - REQUEST - " + request.to_json)
     response = https.request(request)
@@ -80,13 +81,13 @@ module TMDB
   def self.get_genres(type: "movie")
     include Logging
 
-    url = URI("https://api.themoviedb.org/3/genre/#{type}/list")
+    url = URI("#{BASE_URL}/genre/#{type}/list")
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
     request = Net::HTTP::Get.new(url)
     request["Accept"] = "application/json"
-    request["Authorization"] = TMDB_AUTHORIZATION
+    request["Authorization"] = AUTHORIZATION
 
     logger.info("Querying TMDB for #{type} genres - REQUEST - " + request.to_json)
     response = https.request(request)
@@ -98,13 +99,13 @@ module TMDB
   def self.find_by_external_id(external_id, source: "imdb_id")
     include Logging
 
-    url = URI("https://api.themoviedb.org/3/find/#{external_id}?external_source=#{source}")
+    url = URI("#{BASE_URL}/find/#{external_id}?external_source=#{source}")
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
     request = Net::HTTP::Get.new(url)
     request["Accept"] = "application/json"
-    request["Authorization"] = TMDB_AUTHORIZATION
+    request["Authorization"] = AUTHORIZATION
 
     logger.info("Querying TMDB for external ID #{external_id} from source #{source} - REQUEST - " + request.to_json)
     response = https.request(request)
@@ -118,13 +119,13 @@ module TMDB
 
     query = id.to_s
     query += "?append_to_response=#{append_to_response}" if append_to_response
-    url = URI("https://api.themoviedb.org/3/#{type}/#{query}")
+    url = URI("#{BASE_URL}/#{type}/#{query}")
     https = Net::HTTP.new(url.host, url.port)
     https.use_ssl = true
 
     request = Net::HTTP::Get.new(url)
     request["Accept"] = "application/json"
-    request["Authorization"] = TMDB_AUTHORIZATION
+    request["Authorization"] = AUTHORIZATION
 
     logger.info("Querying TMDB for movie ID #{id} - REQUEST - " + request.to_json)
     response = https.request(request)
