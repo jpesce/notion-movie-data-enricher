@@ -38,7 +38,7 @@ def search_movie(notion_page)
 
     if type
       id = result["#{type}_results"].first["id"]
-      return TMDB.get_details(id, type: type)
+      return TMDB.get_details(id, append_to_response: "external_ids", type: type)
     end
   end
 
