@@ -14,7 +14,7 @@ module IMDB
     request["Content-Type"] = "application/json"
 
     logger.info("Querying IMDb for rating of #{imdb_id} - REQUEST - " + request.to_json)
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
       http.request(request)
     end
     logger.info("Querying IMDb for rating of #{imdb_id} - RESPONSE - " + response.to_json)
